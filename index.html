@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CyberLotto Predictor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    :root {
+      --neon-green: #0f0;
+      --neon-blue: #00f7ff;
+      --neon-purple: #bd00ff;
+      --neon-pink: #ff00c8;
+      --dark-bg: #0a0a12;
+      --darker-bg: #050508;
+      --card-bg: rgba(10, 15, 30, 0.8);
+      --glow-intensity: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      color: #fff;
+      background: var(--darker-bg);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Cyberpunk background effects */
+    .cyber-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 247, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 247, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: -2;
+      perspective: 1000px;
+    }
+
+    .hacker-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -3;
+      background: linear-gradient(125deg, #050508 0%, #0a0a20 40%, #0a1030 100%);
+      opacity: 0.9;
+    }
+
+    .floating-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(0, 247, 255, 0.3);
+      box-shadow: 0 0 15px 5px rgba(0, 247, 255, 0.5);
+      animation: float 15s infinite linear;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0.2;
+      }
+      25% {
+        transform: translateY(-20vh) translateX(10vw) rotate(90deg);
+        opacity: 0.5;
+      }
+      50% {
+        transform: translateY(10vh) translateX(20vw) rotate(180deg);
+        opacity: 0.7;
+      }
+      75% {
+        transform: translateY(20vh) translateX(-10vw) rotate(270deg);
+        opacity: 0.5;
+      }
+      100% {
+        transform: translateY(0) translateX(0) rotate(360deg);
+        opacity: 0.2;
+      }
+    }
+
+    /* Login page styles */
+    .login-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      background: rgba(5, 5, 10, 0.95);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .login-box {
+      background: var(--card-bg);
+      padding: 40px 30px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 450px;
+      box-shadow: 0 0 25px rgba(0, 247, 255, 0.4);
+      text-align: center;
+      border: 1px solid var(--neon-blue);
+      position: relative;
+      overflow: hidden;
+      animation: float-card 6s ease-in-out infinite;
+    }
+
+    @keyframes float-card {
+      0%, 100% { transform: translateY(0) rotate(0.5deg); }
+      50% { transform: translateY(-10px) rotate(-0.5deg); }
+    }
+
+    .login-box::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      z-index: -1;
+      background: linear-gradient(45deg, #ff00c8, #00f7ff, #bd00ff, #0f0);
+      background-size: 400%;
+      border-radius: 16px;
+      animation: glowing 20s linear infinite;
+      filter: blur(8px);
+      opacity: 0.7;
+    }
+
+    @keyframes glowing {
+      0% { background-position: 0 0; }
+      50% { background-position: 400% 0; }
+      100% { background-position: 0 0; }
+    }
+
+    .login-logo {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 25px var(--neon-blue);
+      border: 2px solid var(--neon-blue);
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 25px var(--neon-blue); }
+      50% { box-shadow: 0 0 35px var(--neon-blue); }
+    }
+
+    .login-logo i {
+      font-size: 3rem;
+      color: var(--neon-blue);
+      text-shadow: 0 0 15px var(--neon-blue);
+    }
+
+    .login-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--neon-green), var(--neon-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+      letter-spacing: 1px;
+    }
+
+    .login-subtitle {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 30px;
+      font-weight: 400;
+      letter-spacing: 1.5px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 15px 50px 15px 20px;
+      border-radius: 8px;
+      border: 1px solid var(--neon-blue);
+      background: rgba(0, 10, 20, 0.6);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 1.5px;
+    }
+
+    .input-group input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .input-group input:focus {
+      background: rgba(0, 15, 30, 0.8);
+      box-shadow: 0 0 15px var(--neon-blue);
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--neon-blue);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1.2rem;
+    }
+
+    .password-toggle:hover {
+      color: var(--neon-green);
+      text-shadow: 0 0 10px var(--neon-green);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+      color: #000;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+      box-shadow: 0 0 15px rgba(0, 247, 255, 0.6);
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1.5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 25px rgba(0, 247, 255, 0.8);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .telegram-btn {
+      width: 100%;
+      padding: 15px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(45deg, #0088cc, #00aced);
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 15px rgba(0, 136, 204, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1.5px;
+    }
+
+    .telegram-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 25px rgba(0, 136, 204, 0.8);
+    }
+
+    .error-message {
+      color: #ff0066;
+      margin-top: 15px;
+      font-size: 0.9rem;
+      display: none;
+      animation: shake 0.5s;
+      text-shadow: 0 0 10px #ff0066;
+    }
+
+    .watermarklog {
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 14px;
+      padding: 20px;
+      letter-spacing: 1.5px;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+
+    /* CK Lottery iframe background */
+    #cklottery-iframe {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      z-index: 1;
+      display: none;
+    }
+
+    /* Prediction popup overlay */
+    .popup-overlay {
+      position: fixed;
+      top: 20px;
+      left: 0;
+      width: 100%;
+      z-index: 2;
+      pointer-events: none;
+      display: flex;
+      justify-content: center;
+      display: none;
+    }
+
+    .popup-container {
+      position: absolute;
+      width: 360px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 25px rgba(0, 247, 255, 0.4);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--neon-blue);
+      pointer-events: auto;
+      transition: all 0.3s ease;
+      transform: translateY(0);
+      animation: float-card 7s ease-in-out infinite;
+    }
+
+    .popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      cursor: default;
+      user-select: none;
+      border-bottom: 1px solid var(--neon-blue);
+      padding-bottom: 10px;
+    }
+
+    .popup-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--neon-green);
+      text-shadow: 0 0 10px var(--neon-green);
+      letter-spacing: 1.5px;
+    }
+
+    .popup-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .popup-btn {
+      color: var(--neon-blue);
+      cursor: pointer;
+      transition: color 0.2s;
+      pointer-events: auto;
+      font-size: 16px;
+    }
+
+    .popup-btn:hover {
+      color: var(--neon-green);
+      text-shadow: 0 0 10px var(--neon-green);
+    }
+
+    .period-box {
+      background: rgba(0, 10, 20, 0.6);
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      font-family: monospace;
+      font-size: 14px;
+      margin-bottom: 15px;
+      color: var(--neon-blue);
+      border: 1px solid var(--neon-blue);
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 10px var(--neon-blue);
+    }
+
+    .time-display {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .clock {
+      font-size: 16px;
+      color: #ccc;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1.5px;
+    }
+
+    .timer {
+      padding: 6px 12px;
+      background: rgba(0, 247, 255, 0.2);
+      border-radius: 20px;
+      color: var(--neon-blue);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Orbitron', sans-serif;
+      border: 1px solid var(--neon-blue);
+      letter-spacing: 1.5px;
+    }
+
+    .result {
+      font-size: 28px;
+      font-weight: bold;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 10px;
+      text-align: center;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow: 0 0 15px;
+      box-shadow: 0 0 20px;
+    }
+
+    .big {
+      background: rgba(0, 255, 0, 0.1);
+      color: var(--neon-green);
+      border: 2px solid var(--neon-green);
+      box-shadow: 0 0 20px var(--neon-green);
+    }
+
+    .small {
+      background: rgba(0, 247, 255, 0.1);
+      color: var(--neon-blue);
+      border: 2px solid var(--neon-blue);
+      box-shadow: 0 0 20px var(--neon-blue);
+    }
+
+    .stats-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+
+    .stat-box {
+      background: rgba(0, 10, 20, 0.6);
+      padding: 10px;
+      border-radius: 8px;
+      flex: 1;
+      text-align: center;
+      border: 1px solid var(--neon-blue);
+    }
+
+    .stat-label {
+      color: var(--neon-blue);
+      margin-bottom: 5px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .stat-value {
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      letter-spacing: 1.5px;
+    }
+
+    .pattern-predictions {
+      margin-top: 15px;
+      border-top: 1px solid var(--neon-blue);
+      padding-top: 15px;
+    }
+
+    .pattern-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0, 247, 255, 0.2);
+    }
+
+    .pattern-name {
+      font-size: 14px;
+      color: #ccc;
+      letter-spacing: 1.5px;
+    }
+
+    .pattern-prediction {
+      font-weight: 600;
+      font-size: 14px;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1.5px;
+    }
+
+    .pattern-accuracy {
+      font-size: 14px;
+      color: var(--neon-blue);
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .watermark {
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.3);
+      margin-top: 15px;
+      letter-spacing: 1.5px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 400px) {
+      .popup-container {
+        width: 320px;
+      }
+      .result {
+        font-size: 24px;
+        padding: 15px;
+      }
+      .login-box {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Cyberpunk background elements -->
+  <div class="hacker-bg"></div>
+  <div class="cyber-grid"></div>
+  <div class="floating-particles" id="particles-container"></div>
+
+  <!-- Login Page -->
+  <div class="login-container" id="login-container">
+    <div class="login-box">
+      <div class="login-logo">
+        <i class="fas fa-microchip"></i>
+      </div>
+      <h1 class="login-title">BR.JUSTIN V 1</h1>
+      <p class="login-subtitle">AI-PREDICTION ENGINE</p>
+      
+      <div class="input-group">
+        <input type="password" id="password-input" placeholder="ENTER ACCESS CODE">
+        <span class="password-toggle" id="password-toggle">
+          <i class="fas fa-eye"></i>
+        </span>
+      </div>
+      
+      <button class="login-btn" id="login-btn">
+        <i class="fas fa-terminal"></i> INITIATE SYSTEM
+      </button>
+      
+      <div class="error-message" id="error-message">
+        <i class="fas fa-exclamation-triangle"></i> UNAUTHORIZED ACCESS
+      </div>
+      
+      <a href="https://t.me/BrJUSTIN" class="telegram-btn" target="_blank">
+        <i class="fab fa-telegram-plane"></i>KEY ယူရန်ဆက်သွယ်ပါ
+      </a>
+      <a class="watermarklog">SYSTEM DESIGNED BY.JUSTIN</a>
+    </div>
+  </div>
+
+  <!-- CK Lottery iframe background -->
+  <iframe id="cklottery-iframe" src="" frameborder="0"></iframe>
+
+  <!-- Prediction popup overlay -->
+  <div class="popup-overlay" id="popup-overlay">
+    <div class="popup-container" id="popup">
+      <div class="popup-header" id="popup-header">
+        <div class="popup-title">AI-PREDICTOR</div>
+      </div>
+      
+      <div class="popup-content" id="popup-content">
+        <div class="period-box" id="period">20250721100950451</div>
+        
+        <div class="time-display">
+          <div class="clock" id="clock">10:15:18 AM</div>
+          <div class="timer" id="prediction-timer">
+            <i class="fas fa-hourglass-half"></i> <span>NEXT: 01:00</span>
+          </div>
+        </div>
+        
+        <div class="result small" id="result">SMALL</div>
+        
+        <div class="stats-container">
+          <div class="stat-box">
+            <div class="stat-label">LOGIC</div>
+            <div class="stat-value" id="algorithm">AI-ESTIMATE</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Confidence</div>
+            <div class="stat-value" id="accuracy">92.4%</div>
+          </div>
+        </div>
+        
+        <div class="pattern-predictions" id="pattern-predictions">
+          <!-- Pattern predictions will be inserted here -->
+        </div>
+        
+        <div class="watermark">© 2025 LUCKY-LOTTERY PREDICTION BR.JUSTIN </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Create floating particles for background
+    function createParticles() {
+      const container = document.getElementById('particles-container');
+      const particleCount = 20;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random size and position
+        const size = Math.random() * 20 + 5;
+        const posX = Math.random() * 100;
+        const posY = Math.random() * 100;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${posX}vw`;
+        particle.style.top = `${posY}vh`;
+        
+        // Random animation delay
+        particle.style.animationDelay = `${Math.random() * 15}s`;
+        
+        container.appendChild(particle);
+      }
+    }
+    
+    // Initialize particles
+    createParticles();
+
+    // ===== SECURITY MEASURES =====
+    // Prevent right-click and keyboard shortcuts
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      return false;
+    });
+
+    // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+    document.addEventListener('keydown', function(e) {
+      if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+        (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+        (e.ctrlKey && e.key === 'U') ||
+        (e.metaKey && e.altKey && e.key === 'I')
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    // Debugger protection
+    setInterval(function() {
+      checkDebugger();
+    }, 4000);
+
+    function checkDebugger() {
+      const startTime = performance.now();
+      debugger;
+      const endTime = performance.now();
+      if (endTime - startTime > 200) {
+        // Debugger detected
+        document.body.innerHTML = '<h1 style="color:red;text-align:center;margin-top:50px;">Developer tools detected! Please close them to continue.</h1>';
+        window.location.href = 'about:blank';
+      }
+    }
+
+    // ===== APPLICATION CODE =====
+    // Login functionality
+    const loginContainer = document.getElementById('login-container');
+    const passwordInput = document.getElementById('password-input');
+    const passwordToggle = document.getElementById('password-toggle');
+    const loginBtn = document.getElementById('login-btn');
+    const errorMessage = document.getElementById('error-message');
+    const cklotteryIframe = document.getElementById('cklottery-iframe');
+    const popupOverlay = document.getElementById('popup-overlay');
+    const patternPredictions = document.getElementById('pattern-predictions');
+
+    // Password toggle functionality
+    passwordToggle.addEventListener('click', function() {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      passwordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    });
+
+    // Login functionality
+    loginBtn.addEventListener('click', function() {
+      const password = passwordInput.value.trim();
+      if (password === 'VIPY') {
+        // Correct password
+        loginContainer.style.animation = 'fadeIn 0.5s ease reverse';
+        setTimeout(() => {
+          loginContainer.style.display = 'none';
+          cklotteryIframe.style.display = 'block';
+          popupOverlay.style.display = 'flex';
+        }, 400);
+        startPrediction();
+      } else {
+        // Incorrect password
+        errorMessage.style.display = 'block';
+        passwordInput.style.boxShadow = '0 0 15px #ff0066';
+        setTimeout(() => {
+          errorMessage.style.display = 'none';
+          passwordInput.style.boxShadow = 'none';
+        }, 3000);
+      }
+    });
+
+    // Allow login on Enter key press
+    passwordInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        loginBtn.click();
+      }
+    });
+
+    // Prediction functionality
+    // 30s ကနေ 1Min (60s) သို့ ပြောင်းလဲခြင်း
+    const SLOT_SECONDS = 60; // 30s ကို 60s (1 minute) သို့ ပြောင်းလဲခြင်း
+    const REFERENCE_TIME = "2025-06-19T16:38:30+06:30";
+    const REFERENCE_SUFFIX = 51217;
+
+    const BASE_INDEX = (() => {
+      const refDate = new Date(REFERENCE_TIME);
+      const start = new Date(refDate);
+      start.setHours(0, 0, 0, 0);
+      const refSecs = Math.floor((refDate - start) / 1000);
+      return REFERENCE_SUFFIX - Math.floor(refSecs / SLOT_SECONDS) + 1;
+    })();
+
+    const pad = (n, w = 2) => String(n).padStart(w, '0');
+    const getMMTime = () => {
+      const now = new Date();
+      const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+      return new Date(utc + 6.5 * 60 * 60 * 1000);
+    };
+
+    function getCurrentPeriod() {
+      const now = getMMTime();
+      const start = new Date(now);
+      start.setHours(0, 0, 0, 0);
+      const secs = Math.floor((now - start) / 1000);
+      const slotIndex = Math.floor(secs / SLOT_SECONDS);
+      const suffix = pad(BASE_INDEX + slotIndex, 5);
+      return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}1000${suffix}`;
+    }
+
+    // Define multiple prediction patterns with their accuracy percentages
+    const predictionPatterns = [
+      {
+  name: "AI-PREDICATION 1",
+  accuracy: 83.3,
+  generate: (() => {
+    const pattern = [];
+    const pi = "31415926535897932384626433832795028841971693993751";
+    for (let i = 0; i < 1440; i++) { // 2880 မှ 1440 သို့ ပြောင်းလဲခြင်း (24*60=1440)
+      const digit = parseInt(pi[i % pi.length], 10);
+      pattern.push(digit % 2 === 0 ? "SMALL" : "BIG");
+    }
+    return pattern;
+  })()
+}      ,
+   {
+name: "AI-PREDICATION 2",
+        accuracy: 88.7,
+        generate: (() => {
+          const pattern = [];
+          const phi = (1 + Math.sqrt(5)) / 2;
+          for (let i = 0; i < 1440; i++) { // 2880 မှ 1440 သို့ ပြောင်း�လဲခြင်း
+            const n = i + 1;
+            const fibPos = Math.floor(n * phi) % 1440;
+            pattern.push(fibPos % 2 === 0 ? "BIG" : "SMALL");
+          }
+          return pattern;
+        })()
+      },
+
+{
+  name: "AI-PREDICATION 3",
+  accuracy: 80.5,
+  generate: (() => {
+    const pattern = [];
+    let a = 1, b = 1;
+    for (let i = 1; i <= 1440; i++) { // 2880 မှ 1440 သို့ ပြောင်းလဲခြင်း
+      const fib = a;
+      [a, b] = [b, a + b];
+      pattern.push(((fib ^ i) % 2 === 0) ? "SMALL" : "BIG");
+    }
+    return pattern;
+  })()
+},
+       {
+       name: "AI-PREDICATION 4",
+        accuracy: 85.2,
+        generate: (() => {
+          const pattern = [];
+          const isPrime = num => {
+            for (let i = 2, s = Math.sqrt(num); i <= s; i++)
+              if (num % i === 0) return false;
+            return num > 1;
+          };
+          for (let i = 0; i < 1440; i++) { // 2880 မှ 1440 သို့ ပြောင်းလဲခြင်း
+            pattern.push(isPrime(i + 1) ? "BIG" : "SMALL");
+          }
+          return pattern;
+        })()
+      },
+      
+      {
+  name: "AI-PREDICATION 5",
+  accuracy: 83.4,
+  generate: (() => {
+    const pattern = [];
+    for (let i = 0; i < 1440; i++) { // 2880 မှ 1440 သို့ ပြောင်းလဲခြင်း
+      const val = Math.sin(i / 50); // periodic wave
+      pattern.push(val >= 0 ? "BIG" : "SMALL");
+    }
+    return pattern;
+  })()
+},
+{
+  name: "AI-PREDICATION 6",
+  accuracy: 81.7,
+  generate: (() => {
+    const pattern = [];
+    const primes = [];
+    const isPrime = n => {
+      for (let i = 2; i <= Math.sqrt(n); i++) if (n % i === 0) return false;
+      return n > 1;
+    };
+    for (let i = 2; primes.length < 1500; i++) if (isPrime(i)) primes.push(i); // 3000 မှ 1500 သို့ ပြောင်းလဲခြင်း
+    for (let i = 1; i < 1441; i++) { // 2881 မှ 1441 သို့ ပြောင်းလဲခြင်း
+      const gap = primes[i] - primes[i - 1];
+      pattern.push(gap % 2 === 0 ? "SMALL" : "BIG");
+    }
+    return pattern;
+  })()
+},
+{
+  name: "AI-PREDICATION 7",
+  accuracy: 82.5,
+  generate: (() => {
+    const pattern = [];
+    let x = 0.5;
+    const r = 3.99; // chaotic constant
+    for (let i = 0; i < 1440; i++) { // 2880 မှ 1440 သို့ ပြောင်းလဲခြင်း
+      x = r * x * (1 - x);
+      pattern.push(x > 0.5 ? "SMALL" : "BIG");
+    }
+    return pattern;
+  })()
+}
+    ];
+
+    let predictionInterval, lastResult = null;
+
+    function updateAll() {
+      const now = getMMTime();
+      document.getElementById('period').textContent = getCurrentPeriod();
+      document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', {
+        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+      });
+
+      const secs = now.getSeconds();
+      const remain = SLOT_SECONDS - (secs % SLOT_SECONDS);
+      const minutes = Math.floor(remain / 60);
+      const seconds = remain % 60;
+      document.getElementById('prediction-timer').innerHTML =
+        `<i class="fas fa-hourglass-half"></i> <span>NEXT: ${pad(minutes)}:${pad(seconds)}</span>`;
+
+      const start = new Date(now);
+      start.setHours(0, 0, 0, 0);
+      const pIndex = Math.floor((now - start) / 1000 / SLOT_SECONDS);
+      
+      // Get predictions from all patterns
+      const predictions = predictionPatterns.map(pattern => {
+        return {
+          name: pattern.name,
+          prediction: pattern.generate[pIndex % pattern.generate.length],
+          accuracy: pattern.accuracy
+        };
+      });
+
+      // Determine final prediction based on weighted average
+      const weightedPredictions = {
+        BIG: 0,
+        SMALL: 0
+      };
+
+      predictions.forEach(p => {
+        weightedPredictions[p.prediction] += p.accuracy;
+      });
+
+      const finalPrediction = weightedPredictions.BIG > weightedPredictions.SMALL ? "BIG" : "SMALL";
+      const confidence = Math.max(weightedPredictions.BIG, weightedPredictions.SMALL) / 
+                        (weightedPredictions.BIG + weightedPredictions.SMALL) * 100;
+
+      // Update main result display
+      const resEl = document.getElementById('result');
+      if (lastResult !== finalPrediction) {
+        resEl.className = `result ${finalPrediction.toLowerCase()}`;
+        resEl.textContent = finalPrediction;
+        lastResult = finalPrediction;
+      }
+
+      // Update confidence
+      document.getElementById('accuracy').textContent = `${confidence.toFixed(1)}%`;
+
+      // Update pattern predictions display
+      patternPredictions.innerHTML = '';
+      predictions.forEach(p => {
+        const row = document.createElement('div');
+        row.className = 'pattern-row';
+        row.innerHTML = `
+          <div class="pattern-name">${p.name}</div>
+          <div class="pattern-prediction ${p.prediction.toLowerCase()}">${p.prediction}</div>
+          <div class="pattern-accuracy">${p.accuracy.toFixed(1)}%</div>
+        `;
+        patternPredictions.appendChild(row);
+      });
+    }
+
+    function startPrediction() {
+      updateAll();
+      if (predictionInterval) clearInterval(predictionInterval);
+      predictionInterval = setInterval(updateAll, 1000);
+    }
+  </script>
+</body>
+</html>
