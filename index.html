@@ -576,7 +576,7 @@
         <i class="fas fa-microchip"></i>
       </div>
       <h1 class="login-title">BR.JUSTIN V 1</h1>
-      <p class="login-subtitle">AI-PREDICTION ENGINE</p>
+      <p class="login-subtitle">AI-PREDICTION ENGINE-TRX</p>
       
       <div class="input-group">
         <input type="password" id="password-input" placeholder="ENTER ACCESS CODE">
@@ -607,7 +607,7 @@
   <div class="popup-overlay" id="popup-overlay">
     <div class="popup-container" id="popup">
       <div class="popup-header" id="popup-header">
-        <div class="popup-title">AI-PREDICTOR</div>
+        <div class="popup-title">AI-PREDICTOR-TRX</div>
       </div>
       
       <div class="popup-content" id="popup-content">
@@ -761,7 +761,7 @@
     // 30s ကနေ 1Min (60s) သို့ ပြောင်းလဲခြင်း
     const SLOT_SECONDS = 60; // 30s ကို 60s (1 minute) သို့ ပြောင်းလဲခြင်း
     const REFERENCE_TIME = "2025-06-19T16:38:30+06:30";
-    const REFERENCE_SUFFIX = 51217;
+    const REFERENCE_SUFFIX = 130998;
 
     const BASE_INDEX = (() => {
       const refDate = new Date(REFERENCE_TIME);
@@ -785,7 +785,7 @@
       const secs = Math.floor((now - start) / 1000);
       const slotIndex = Math.floor(secs / SLOT_SECONDS);
       const suffix = pad(BASE_INDEX + slotIndex, 5);
-      return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}1000${suffix}`;
+      return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${suffix}`;
     }
 
     // Define multiple prediction patterns with their accuracy percentages
